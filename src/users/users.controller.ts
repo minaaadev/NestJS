@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param } from '@nestjs/common';
+import { Controller, Get, Post,Delete, Body, Param } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
@@ -6,12 +6,13 @@ import {User} from './entities/user.entity';
 
 @Controller('users')
 export class UsersController {
-  constructor(private usersService: UsersService) {}
+  constructor(private readonly usersService: UsersService) {}
 
   @Post()
-  async createUser(@Body() dto: CreateUserDto): Promise<void> {
+  async createUser(@Body() dto: CreateUserDto): Promise<string> {
     const {name, password} = dto
     await this.usersService.CreateUser(name, password)
+    return `회원가입이 완료되었습니다.`
   }
 
   @Post('/login')
@@ -22,9 +23,13 @@ export class UsersController {
 
 
   @Get('/:id')
-  async getUserInfo(@Param('id') userId: string): Promise<User>{
-    console.log(userId)
-    return new User()
+  async getUser(@Param('id') id: string){
+    return await this.usersService.getUserById(Number(id))
+
+  }
+  @Delete('/delete/:id')
+  async deleteUser(@Param('id') id:string){
+    return await this.usersService.deleteUser(Number(id))
   }
   
 }
