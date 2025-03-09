@@ -16,8 +16,7 @@ export class UsersService {
 
     const existingUser = await this.entityManager.findOne(User, { where: { name } });
     if (existingUser) {
-      // 중복된 유저가 있으면 HTTP 예외 발생
-      throw new HttpException('이미 존재하는 사용자입니다.', HttpStatus.BAD_REQUEST);  // 상태 코드 400 (Bad Request)
+      throw new HttpException('이미 존재하는 사용자입니다.', HttpStatus.BAD_REQUEST); 
     }
 
     await this.checkUserExist(name)
