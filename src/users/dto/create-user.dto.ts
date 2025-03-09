@@ -11,7 +11,5 @@ export class CreateUserDto {
 
         return '유저 생성 완료. 이름:${name}, 비밀번호:${password}'
         
-        }
-
-       
+        }  
     }
