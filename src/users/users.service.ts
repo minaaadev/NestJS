@@ -14,47 +14,48 @@ export class UsersService {
 
   async CreateUser(name:string, password:string):Promise<User> {
 
-    const existingUser = await this.entityManager.findOne(User, { where: { name } });
+    const existingUser = await this.entityManager.findOne(User, { where: { name } })
     if (existingUser) {
-      throw new HttpException('이미 존재하는 사용자입니다.', HttpStatus.BAD_REQUEST); 
+      throw new HttpException('이미 존재하는 사용자입니다.', HttpStatus.BAD_REQUEST)
     }
 
-    await this.checkUserExist(name)
     const hashedPassword = await bcrypt.hash(password, 10)
 
     const user = new User()
     user.name=name
-    user.password=password
+    user.password=hashedPassword
 
-    const saltRounds = 10;
-    user.password = await bcrypt.hash(password, saltRounds)
-
-    return await this.entityManager.save(User,user)
+    return await this.entityManager.save(user)
   }
+
 
   async login(name:string, password:string):Promise<string>{
-    const user = await this.entityManager.findOne(User, {where:{name}})
     
-    if(!user){
-      throw new NotFoundException('사용자가 존재하지 않습니다.')
-    }
-
-    const isPasswordValid=await bcrypt.compare(password, user.password);
-    if(!isPasswordValid){
-      throw new UnauthorizedException('비밀번호가 일치하지 않습니다.')
-    }
+  console.log('Received name:', name) 
+  console.log('Received password:', password) 
     
-    return `로그인이 완료되었습니다. `
-  }
-
-  private async checkUserExist(name:string){
-    const existingUser = await this.entityManager.findOne(User, { where: { name } });
-    if (existingUser) {
-      throw new Error('이미 존재하는 사용자입니다.');
-    }
-    return false; 
+  const user = await this.entityManager.findOne(User, {where:{name}})
   
+  if(!user){
+    throw new NotFoundException('사용자가 존재하지 않습니다.')
   }
+
+  const isPasswordValid=await bcrypt.compare(password, user.password);
+  if(!isPasswordValid){
+    throw new UnauthorizedException('비밀번호가 일치하지 않습니다.')
+  }
+  
+  return `로그인이 완료되었습니다. `
+}
+
+private async checkUserExist(name:string){
+  const existingUser = await this.entityManager.findOne(User, { where: { name } });
+  if (existingUser) {
+    throw new Error('이미 존재하는 사용자입니다.');
+  }
+  return false; 
+
+}
 
 
   async getUserById(id:number){
@@ -65,9 +66,6 @@ export class UsersService {
     return user
   }
 
-  update(id: number, updateUserDto: LoginUserDto) {
-    return `This action updates a #${id} user`;
-  }
 
   async deleteUser(id:number):Promise<string>{
     const user = await this.entityManager.findOne(User, {where:{id}})
