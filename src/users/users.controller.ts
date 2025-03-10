@@ -31,5 +31,10 @@ export class UsersController {
   async deleteUser(@Param('id') id:string){
     return await this.usersService.deleteUser(Number(id))
   }
+
+  @Get('sync-status')
+  checkSynchronizer() {
+    return this.usersService.synchEnabled();
+  }
   
 }

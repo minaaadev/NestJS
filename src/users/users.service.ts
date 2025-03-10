@@ -4,12 +4,16 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
 import { EntityManager } from 'typeorm';
 import {User} from './entities/user.entity';
-import * as bcrypt from 'bcryptjs';
+import * as bcrypt from 'bcryptjs'; 
+import { ConfigService } from '@nestjs/config';
+
 
 @Injectable()
 export class UsersService {
-
-  constructor(private readonly entityManager: EntityManager){}
+  constructor(
+    private readonly entityManager: EntityManager,
+    private readonly configService: ConfigService,
+  ){}
 
 
   async CreateUser(name:string, password:string):Promise<User> {
@@ -30,10 +34,11 @@ export class UsersService {
 
 
   async login(name:string, password:string):Promise<string>{
-    
+  
   console.log('Received name:', name) 
   console.log('Received password:', password) 
     
+  
   const user = await this.entityManager.findOne(User, {where:{name}})
   
   if(!user){
@@ -42,6 +47,7 @@ export class UsersService {
 
   const isPasswordValid=await bcrypt.compare(password, user.password);
   if(!isPasswordValid){
+    
     throw new UnauthorizedException('비밀번호가 일치하지 않습니다.')
   }
   
@@ -56,8 +62,6 @@ private async checkUserExist(name:string){
   return false; 
 
 }
-
-
   async getUserById(id:number){
     const user = await this.entityManager.findOne(User,{where:{id}})
     if(!user){
@@ -76,5 +80,22 @@ private async checkUserExist(name:string){
     
     await this.entityManager.remove(User, user)
     return `id가 ${id}인 사용자가 삭제되었습니다.`
+  }
+
+
+  async onModuleInit() {
+    await this.synchEnabled(); // 서버 시작 시 synchEnabled 실행
+  }
+
+  async synchEnabled() {
+    const synchronizerEnabled = this.configService.get<string>('SYNCHRONIZER_ENABLED');
+
+    if (synchronizerEnabled === 'false') {
+      console.log('Synchronizer가 비활성화되었습니다.');
+      return false;
+    }
+    
+    console.log('Synchronizer가 활성화되었습니다.');
+    return true;
   }
 }

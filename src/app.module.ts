@@ -5,14 +5,15 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './users/entities/user.entity';
 import { UsersModule } from './users/users.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { UsersService } from './users/users.service';
 
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),  // ConfigModule을 글로벌로 설정
     TypeOrmModule.forRootAsync({
-      imports: [ConfigModule],  // ConfigModule 사용
-      inject: [ConfigService],  // ConfigService 주입
+      imports: [ConfigModule.forRoot()],  
+      inject: [ConfigService],  
       useFactory: (configService: ConfigService) => ({
         type: 'mariadb',
         host: configService.get<string>('DB_HOST'),
@@ -20,11 +21,11 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
         username: configService.get<string>('DB_USERNAME'),
         password: configService.get<string>('DB_PASSWORD'),
         database: configService.get<string>('DB_NAME'),
-        entities: [User],  // 엔티티 설정
-        synchronize: true,  // 애플리케이션 실행 시, 자동으로 DB 테이블 생성
+        entities: [User],  
+        synchronize: false,  
       }),
     }),
-    UsersModule,  // UsersModule 연결
+    UsersModule, 
     
   ],
   controllers: [AppController],
