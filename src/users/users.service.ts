@@ -33,26 +33,37 @@ export class UsersService {
   }
 
 
+
+
   async login(name:string, password:string):Promise<string>{
   
   console.log('Received name:', name) 
   console.log('Received password:', password) 
     
-  
+  try{
   const user = await this.entityManager.findOne(User, {where:{name}})
   
   if(!user){
+    console.log(`user not found: ${name}`)
     throw new NotFoundException('사용자가 존재하지 않습니다.')
   }
 
-  const isPasswordValid=await bcrypt.compare(password, user.password);
+  const isPasswordValid=await bcrypt.compare(password, user.password)
   if(!isPasswordValid){
+    console.log(`${name}님의 로그인이 완료되었습니다. `) 
     
-    throw new UnauthorizedException('비밀번호가 일치하지 않습니다.')
   }
   
-  return `로그인이 완료되었습니다. `
+  return '로그인 되었습니다'
+
+} catch(error){
+  console.log(error.stack); 
+  throw error; 
+
+   }
 }
+
+
 
 private async checkUserExist(name:string){
   const existingUser = await this.entityManager.findOne(User, { where: { name } });

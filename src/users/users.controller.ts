@@ -1,14 +1,16 @@
-import { Controller, Get, Post,Delete, Body, Param } from '@nestjs/common';
+import { Controller, Get, Post,Delete, Body, Param, UsePipes, ValidationPipe } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
 import {User} from './entities/user.entity';
+
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post()
+  @UsePipes(new ValidationPipe())
   async createUser(@Body() dto: CreateUserDto): Promise<string> {
     const {name, password} = dto
     await this.usersService.CreateUser(name, password)
@@ -16,6 +18,7 @@ export class UsersController {
   }
 
   @Post('/login')
+  @UsePipes(new ValidationPipe())
   async login(@Body() dto: LoginUserDto): Promise<string> {
     const {name, password} = dto
     return await this.usersService.login(name, password)

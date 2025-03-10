@@ -1,8 +1,11 @@
-import {Post, Body} from '@nestjs/common';
+import { Post, Body } from '@nestjs/common';
+import { IsString } from 'class-validator';
+
 
 export class CreateUserDto {
-    
-    name:string
-    password:string
 
-    }
+  @IsString()
+  name: string
+  password: string
+ 
+}
