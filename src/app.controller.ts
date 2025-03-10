@@ -1,4 +1,4 @@
-import { Controller, Get, Post,Delete, Param, Body } from '@nestjs/common';
+import { Controller, Get, Post, Delete, Param, Body } from '@nestjs/common';
 import { AppService } from './app.service';
 
 @Controller()
@@ -10,13 +10,11 @@ export class AppController {
     return this.appService.getHello();
   }
 
-  @Delete (':userId/memo/:memoId')
+  @Delete(':userId/memo/:memoId')
   deleteUserMemo(
-    @Param('userId')userId:string,
-    @Param('memoId')memoId:string,
-  ){
-    return 'userId : ${userId}, ${memoId}'
+    @Param('userId') userId: string,
+    @Param('memoId') memoId: string,
+  ) {
+    return 'userId : ${userId}, ${memoId}';
   }
 }
-
-

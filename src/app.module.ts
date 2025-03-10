@@ -7,13 +7,12 @@ import { UsersModule } from './users/users.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UsersService } from './users/users.service';
 
-
 @Module({
   imports: [
-    ConfigModule.forRoot({ isGlobal: true }),  // ConfigModule을 글로벌로 설정
+    ConfigModule.forRoot({ isGlobal: true }), // ConfigModule을 글로벌로 설정
     TypeOrmModule.forRootAsync({
-      imports: [ConfigModule.forRoot()],  
-      inject: [ConfigService],  
+      imports: [ConfigModule.forRoot()],
+      inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
         type: 'mariadb',
         host: configService.get<string>('DB_HOST'),
@@ -21,12 +20,11 @@ import { UsersService } from './users/users.service';
         username: configService.get<string>('DB_USERNAME'),
         password: configService.get<string>('DB_PASSWORD'),
         database: configService.get<string>('DB_NAME'),
-        entities: [User],  
-        synchronize: false,  
+        entities: [User],
+        synchronize: false,
       }),
     }),
-    UsersModule, 
-    
+    UsersModule,
   ],
   controllers: [AppController],
   providers: [AppService],
