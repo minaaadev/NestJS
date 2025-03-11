@@ -12,21 +12,21 @@ export class UsersRepository {
   ) {}
 
   async findByName(name: string): Promise<User | null> {
-    return await this.repository.findOne({ where: { name } })
+    return await this.repository.findOne({ where: { name } });
   }
   async findById(id: number): Promise<User | null> {
-    return await this.repository.findOne({ where: { id } })
+    return await this.repository.findOne({ where: { id } });
   }
 
   create(user: Partial<User>): User {
-    return this.repository.create(user)
+    return this.repository.create(user);
   }
 
   async save(user: User): Promise<User> {
-    return await this.repository.save(user)
+    return await this.repository.save(user);
   }
 
   async remove(user: User): Promise<void> {
-    await this.repository.remove(user)
+    await this.repository.remove(user);
   }
 }

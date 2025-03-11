@@ -24,81 +24,81 @@ export class UsersService {
   ) {}
 
   async CreateUser(name: string, password: string): Promise<User> {
-    const existingUser = await this.usersRepository.findByName(name)
+    const existingUser = await this.usersRepository.findByName(name);
     if (existingUser) {
       throw new HttpException(
         '이미 존재하는 사용자입니다.',
         HttpStatus.BAD_REQUEST,
-      )
+      );
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10)
+    const hashedPassword = await bcrypt.hash(password, 10);
 
-    const user = new User()
-    user.name = name
-    user.password = hashedPassword
+    const user = new User();
+    user.name = name;
+    user.password = hashedPassword;
 
-    return await this.entityManager.save(user)
+    return await this.entityManager.save(user);
   }
 
   async login(name: string, password: string): Promise<string> {
-    console.log('Received name:', name)
-    console.log('Received password:', password)
+    console.log('Received name:', name);
+    console.log('Received password:', password);
 
     try {
-      const user = await this.usersRepository.findByName(name)
+      const user = await this.usersRepository.findByName(name);
 
       if (!user) {
-        console.log(`user not found: ${name}`)
-        throw new NotFoundException('사용자가 존재하지 않습니다.')
+        console.log(`user not found: ${name}`);
+        throw new NotFoundException('사용자가 존재하지 않습니다.');
       }
 
-      const isPasswordValid = await bcrypt.compare(password, user.password)
+      const isPasswordValid = await bcrypt.compare(password, user.password);
       if (!isPasswordValid) {
-        console.log(`잘못된 비밀번호입니다. `)
+        console.log(`잘못된 비밀번호입니다. `);
       }
 
-      return '로그인이 완료되었습니다'
+      return '로그인이 완료되었습니다';
     } catch (error) {
-      console.log(error.stack)
-      throw error
+      console.log(error.stack);
+      throw error;
     }
   }
 
   async getUserById(id: number) {
-    const user = await this.usersRepository.findById(id)
+    const user = await this.usersRepository.findById(id);
     if (!user) {
-      throw new NotFoundException(`id가 ${id}인 사용자가 존재하지 않습니다.`)
+      throw new NotFoundException(`id가 ${id}인 사용자가 존재하지 않습니다.`);
     }
-    return user
+    return user;
   }
 
   async deleteUser(id: number): Promise<string> {
-    const user = await this.usersRepository.findById(id)
+    const user = await this.usersRepository.findById(id);
 
     if (!user) {
-      throw new Error(`id가 ${id}인 사용자가 존재하지 않습니다.`)
+      throw new Error(`id가 ${id}인 사용자가 존재하지 않습니다.`);
     }
 
-    await this.usersRepository.remove(user)
-    return `id가 ${id}인 사용자가 삭제되었습니다.`
+    await this.usersRepository.remove(user);
+    return `id가 ${id}인 사용자가 삭제되었습니다.`;
   }
 
   async onModuleInit() {
-    await this.synchEnabled() // 서버 시작 시 synchEnabled 실행
+    await this.synchEnabled(); // 서버 시작 시 synchEnabled 실행
   }
 
   async synchEnabled() {
     const synchronizerEnabled = this.configService.get<string>(
       'SYNCHRONIZER_ENABLED',
-    )
+    );
 
     if (synchronizerEnabled === 'false') {
-      console.log('Synchronizer가 비활성화되었습니다.')
-      return false
+      console.log('Synchronizer가 비활성화되었습니다.');
+      return false;
     }
 
-    console.log('Synchronizer가 활성화되었습니다.')
-    return true
+    console.log('Synchronizer가 활성화되었습니다.');
+    return true;
   }
 }

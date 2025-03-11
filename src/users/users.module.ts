@@ -5,6 +5,12 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { JwtModule } from '@nestjs/jwt';
 import { UsersRepository } from './repository/users.repository';
+import { APP_PIPE } from '@nestjs/core';
+import { ValidationPipe } from '@nestjs/common';
+
+
+
+
 @Module({
   imports: [
     TypeOrmModule.forFeature([User]),
@@ -14,7 +20,12 @@ import { UsersRepository } from './repository/users.repository';
     }),
   ],
   controllers: [UsersController],
-  providers: [UsersService, UsersRepository],
+  providers: [UsersService, UsersRepository,
+    {
+    provide: APP_PIPE,
+    useClass: ValidationPipe
+  },
+],
   exports: [UsersService, UsersRepository],
 })
 export class UsersModule {}

@@ -1,0 +1,23 @@
+{
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint",
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": "explicit"
+    },
+    "[html]": {
+      "editor.tabSize": 2,
+      "editor.defaultFormatter": "vscode.html-language-features"
+    },
+    "[javascript]": {
+      "editor.tabSize": 2
+    },
+    "[typescript]": {
+      "editor.tabSize": 2
+    },
+    "cSpell.userWords": ["nestjs", "typeorm"],
+    "cSpell.words": ["EXPIREDURATION", "innodep", "Rtsp"],
+    "javascript.suggest.paths": true,
+    "typescript.suggest.paths": true,
+    "javascript.updateImportsOnFileMove.enabled": "always",
+    "typescript.updateImportsOnFileMove.enabled": "always"
+  }
