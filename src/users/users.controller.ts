@@ -21,28 +21,28 @@ export class UsersController {
   @UsePipes(new ValidationPipe())
   async createUser(@Body() dto: CreateUserDto): Promise<string> {
     const { name, password } = dto;
-    await this.usersService.CreateUser(name, password);
-    return `회원가입이 완료되었습니다.`;
+    await this.usersService.CreateUser(name, password)
+    return `회원가입이 완료되었습니다.`
   }
 
   @Post('/login')
   @UsePipes(new ValidationPipe())
   async login(@Body() dto: LoginUserDto): Promise<string> {
     const { name, password } = dto;
-    return await this.usersService.login(name, password);
+    return await this.usersService.login(name, password)
   }
 
   @Get('/:id')
   async getUser(@Param('id') id: string) {
-    return await this.usersService.getUserById(Number(id));
+    return await this.usersService.getUserById(Number(id))
   }
   @Delete('/delete/:id')
   async deleteUser(@Param('id') id: string) {
-    return await this.usersService.deleteUser(Number(id));
+    return await this.usersService.deleteUser(Number(id))
   }
 
   @Get('sync-status')
   checkSynchronizer() {
-    return this.usersService.synchEnabled();
+    return this.usersService.synchEnabled()
   }
 }
