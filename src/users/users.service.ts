@@ -55,7 +55,7 @@ export class UsersService {
 
       const isPasswordValid = await bcrypt.compare(password, user.password)
       if (!isPasswordValid) {
-        console.log(`${name}님의 로그인이 완료되었습니다. `)
+        console.log(`잘못된 비밀번호입니다. `)
       }
 
       return '로그인이 완료되었습니다'
